@@ -4,6 +4,9 @@
   import Albums from "$lib/Albums.svelte";
   import Artists from "$lib/Artists.svelte";
   import Songs from "$lib/Songs.svelte";
+    import { onMount } from "svelte";
+    import Album from "$lib/Album.svelte";
+    import Artist from "$lib/Artist.svelte";
 
   let search = "";
   let timeout: number;
@@ -12,9 +15,18 @@
   let albums: any[] = [];
   let result = "";
   let tabSearch = "";
+  let hash = "search";
+  let hashId = "";
 
+  onMount(() => {
+    window.addEventListener("hashchange", () => {
+      hash = window.location.hash.substring(1).split("-")[0];
+      hashId = window.location.hash.substring(1).split("-")[1];
+    });
+  })
   $: {
     clearTimeout(timeout);
+    albums = [];
     if (search.length) {
       timeout = setTimeout(() => {
         let searchType = "album";
@@ -25,8 +37,9 @@
         } else {
           searchType = "album";
         }
+        window.location.hash = `#search-${searchType}`;
         fetch(
-          `http://localhost:3000/search?search=${search}&search_type=${searchType}`,
+          `http://localhost:3000/search?search=${encodeURIComponent(search)}&search_type=${encodeURIComponent(searchType)}`,
         ) // urlencode
           .then((res) => res.json())
           .then((data) => {
@@ -50,7 +63,7 @@
   };
 </script>
 
-<Container alignItem={result ? "start" : "center"}>
+<Container alignItem={search ? "start" : "center"}>
   <h1>Downloader</h1>
   <div class="input">
     <input
@@ -68,15 +81,18 @@
       class:button-hover={buttonHover}>clear</button
     >
   </div>
-  {#if result}
+  {#if search}
     <SearchTab bind:activeTab={tabSearch} />
-    {#if tabSearch == "Songs"}
+    {#if hash === "album"}
+      <Album id={hashId}/>
+    {:else if hash === "artist"}
+      <Artist id={hashId} />
+    {:else if tabSearch == "Songs"}
       <Songs items={albums} />
     {:else if tabSearch == "Artists"}
       <Artists items={albums} />
     {:else if tabSearch == "Albums"}
       <Albums items={albums} />
-      <!-- <Songs item={albums} /> -->
     {/if}
   {/if}
 </Container>

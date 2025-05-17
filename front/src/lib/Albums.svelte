@@ -1,26 +1,31 @@
-<script lang=ts>
-  let props = $props()
-
+<script lang="ts">
+  let props = $props();
 </script>
 
 <div class="list">
   {#each props.items as item}
-    <div class="item">
+    <a class="item" href={`#album-${item.id}`}>
       <div class="cover">
-        <img src={item.cover_medium} alt={item.title} />
-        <button class="download">Play</button>
+        <img src={item.cover_medium} alt=""/>
+        <button>Play</button>
       </div>
       <p class="title">{item.title}</p>
-      <p class="artist">{item.artist.name}</p>
-    </div>
+      <p class="artist">{item.artist?.name}</p>
+    </a>
   {/each}
 </div>
 
 <style>
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
   .list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: 10px;
+    row-gap: 20px;
   }
 
   .item {
@@ -31,6 +36,7 @@
 
   img {
     width: 100%;
+    aspect-ratio: 1/1;
     height: auto;
     border-radius: 5px;
   }
@@ -41,19 +47,20 @@
   }
 
   .artist {
-    font-size: 0.8em;
     margin: 0;
   }
 
   .cover {
     position: relative;
-    width: 100%;
     aspect-ratio: 1/1;
+    margin-bottom: 5px;
   }
 
-  p { font-size: 1.1rem; }
+  p {
+    font-size: 1.1rem;
+  }
 
-  .download {
+  button {
     position: absolute;
     bottom: 0px;
     right: 0px;

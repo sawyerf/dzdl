@@ -1,38 +1,70 @@
-<script lang=ts>
-  let props = $props()
+<script lang="ts">
+  import '@fortawesome/fontawesome-free/css/all.min.css'
 
+  let props = $props();
+  let preview_url = $state("");
+
+  const downloadHandle = (item:any) => {
+    fetch(`http://localhost:3000/download?url=${encodeURIComponent(item.link)}`)
+  }
 </script>
 
+{#if preview_url}
+  <audio src={preview_url} controls autoplay></audio>
+{/if}
 <div class="list">
   {#each props.items as item}
-    <div class="item">
-      <div class="cover">
-        <img src={item.album?.cover_medium} alt={item.title} />
-        <button class="download">Play</button>
+    <div class="item" onclick={(e) => {
+      preview_url = item.preview
+    }}>
+      <img src={item.album?.cover_medium} alt={item.title} />
+      <div class="info">
+        <p class="title">{item.title}</p>
+        <p class="artist">{item.artist?.name} · {item.album?.title}</p>
       </div>
-      <p class="title">{item.title}</p>
-      <p class="artist">{item.album?.title} - {item.artist?.name}</p>
+      <button
+        onclick={(e) => {
+          downloadHandle(item)
+          e.stopPropagation();
+        }}
+      >
+        <i class="fa-solid fa-download"></i>
+      </button>
     </div>
   {/each}
 </div>
 
 <style>
+  audio {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
   .list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 10px;
   }
 
   .item {
     display: flex;
-    flex-direction: column;
-    align-items: start;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
   }
 
   img {
-    width: 100%;
-    height: auto;
+    width: 4em;
+    aspect-ratio: 1/1;
     border-radius: 5px;
+    margin-right: 10px;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
   }
 
   .title {
@@ -41,27 +73,24 @@
   }
 
   .artist {
-    font-size: 0.8em;
     margin: 0;
   }
 
-  .cover {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 1/1;
-  }
-
-  .download {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    padding: 10px 10px;
+  button {
+    background: white;
     border: none;
-    background: transparent;
     cursor: pointer;
-    color: white;
+    color: #000;
+    font-size: 1.5rem;
+    padding: 0.5em;
+    z-index: 9;
   }
 
-  p { font-size: 1.1rem; }
+  p {
+    font-size: 1.1rem;
+  }
+  
+  i {
+    font-size: 1.4rem;
+  }
 </style>
