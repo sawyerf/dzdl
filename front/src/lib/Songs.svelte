@@ -1,11 +1,12 @@
 <script lang="ts">
   import '@fortawesome/fontawesome-free/css/all.min.css'
+  import { getApi } from "$lib/api";
 
   let props = $props();
   let preview_url = $state("");
 
   const downloadHandle = (item:any) => {
-    fetch(`http://localhost:3000/download?url=${encodeURIComponent(item.link)}`)
+    getApi("download", { url: item.link })
   }
 </script>
 

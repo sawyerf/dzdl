@@ -1,0 +1,5 @@
+config
+config.toml
+downloads
+*.mp3
+*.jpg

@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config:/root/.config/streamrip/
+      - ./downloads:/root/StreamripDownloads/
+    restart: unless-stopped

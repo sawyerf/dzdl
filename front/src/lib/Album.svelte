@@ -2,12 +2,13 @@
   import { onMount } from "svelte";
   import Container from "$lib/Container.svelte";
   import Songs from "$lib/Songs.svelte";
+  import { getApi } from "$lib/api";
 
   let { id } = $props();
   let info: any | null = $state(null);
 
   onMount(() => {
-    fetch(`http://localhost:3000/album?id=${id}`)
+    getApi('album', { id: id })
       .then((res) => res.json())
       .then((data) => {
         info = data;
@@ -18,7 +19,7 @@
   });
 
   const download = () => {
-    fetch(`http://localhost:3000/download?url=${encodeURIComponent(info.link)}`)
+    getApi('download', { url: info.link })
   }
 </script>
 

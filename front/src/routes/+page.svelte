@@ -4,9 +4,10 @@
   import Albums from "$lib/Albums.svelte";
   import Artists from "$lib/Artists.svelte";
   import Songs from "$lib/Songs.svelte";
-    import { onMount } from "svelte";
-    import Album from "$lib/Album.svelte";
-    import Artist from "$lib/Artist.svelte";
+  import { onMount } from "svelte";
+  import Album from "$lib/Album.svelte";
+  import Artist from "$lib/Artist.svelte";
+  import { getApi } from "$lib/api";
 
   let search = "";
   let timeout: number;
@@ -23,7 +24,7 @@
       hash = window.location.hash.substring(1).split("-")[0];
       hashId = window.location.hash.substring(1).split("-")[1];
     });
-  })
+  });
   $: {
     clearTimeout(timeout);
     albums = [];
@@ -38,9 +39,7 @@
           searchType = "album";
         }
         window.location.hash = `#search-${searchType}`;
-        fetch(
-          `http://localhost:3000/search?search=${encodeURIComponent(search)}&search_type=${encodeURIComponent(searchType)}`,
-        ) // urlencode
+        getApi("search", { search: search, search_type: searchType })
           .then((res) => res.json())
           .then((data) => {
             if (data.length) {
@@ -84,7 +83,7 @@
   {#if search}
     <SearchTab bind:activeTab={tabSearch} />
     {#if hash === "album"}
-      <Album id={hashId}/>
+      <Album id={hashId} />
     {:else if hash === "artist"}
       <Artist id={hashId} />
     {:else if tabSearch == "Songs"}
