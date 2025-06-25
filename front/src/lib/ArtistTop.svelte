@@ -1,18 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Albums from "$lib/Albums.svelte";
   import { getApi } from "$lib/api";
   import HeaderItem from "./HeaderItem.svelte";
+  import Songs from "./Songs.svelte";
 
-  let albums: any = $state(null);
+  let tracks: any = $state(null);
   let info: any = $state(null);
   let { id } = $props();
 
   onMount(() => {
-    getApi("artist", { id: id })
+    getApi("artist-top", { id: id })
       .then((res) => res.json())
       .then((data) => {
-        albums = data;
+        tracks = data;
       })
       .catch((err) => {
         console.error(err);
@@ -32,23 +32,11 @@
 <HeaderItem image={info?.picture_medium} isRounded={true}>
   <h1>{info?.name}</h1>
   <p>{info?.nb_fan} fans</p>
-  <p>{info?.nb_album} albums</p>
-  <a href={`#artistTop-${id}`} aria-label="Top tracks">
-    <i class="fa-solid fa-arrow-up"></i>
-  </a>
+  <p>{info?.nb_album} tracks</p>
 </HeaderItem>
-<Albums items={albums?.data} />
+<Songs items={tracks?.data} />
 
 <style>
-  a {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #000;
-    font-size: 1.5rem;
-    text-align: start;
-  }
-
   h1 {
     font-size: 1.7rem;
     margin: 0;

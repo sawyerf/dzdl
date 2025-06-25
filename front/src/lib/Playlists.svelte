@@ -4,7 +4,6 @@
 
   let props = $props();
   let preview_url = $state("");
-  let idPlaying = $state("");
 
   const downloadHandle = (item: any) => {
     getApi("download", { url: item.link });
@@ -16,31 +15,14 @@
 {/if}
 <div class="list">
   {#each props.items as item}
-    <div
-      role="button"
-      class="item"
-      onclick={(e) => {
-        preview_url = item.preview;
-        idPlaying = item.id;
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: item.title,
-          artist: item.artist?.name,
-          album: item.album?.title,
-          artwork: [{ src: item.album?.cover }],
-        });
-      }}
-    >
-      <img src={item.album?.cover_medium} alt={item.title} />
+    <a class="item" href={`#playlist-${item.id}`}>
+      <img src={item.picture_medium} alt={item.title} />
       <div class="info">
-        <p class="title">
-          {item.title}
-          {#if idPlaying === item.id}
-            <i class="fa-solid fa-volume-high playing"></i>
-          {/if}
-        </p>
-        <p class="artist">{item.artist?.name} · {item.album?.title}</p>
+        <p class="title">{item.title}</p>
+        <p class="artist">{item.user?.name}</p>
       </div>
       <button
+        aria-label="Download"
         onclick={(e) => {
           downloadHandle(item);
           e.stopPropagation();
@@ -48,7 +30,7 @@
       >
         <i class="fa-solid fa-download"></i>
       </button>
-    </div>
+    </a>
   {/each}
 </div>
 
@@ -69,7 +51,8 @@
     flex-direction: row;
     align-items: center;
     cursor: pointer;
-    flex: 1;
+    text-decoration: none;
+    color: black;
   }
 
   img {
@@ -84,22 +67,15 @@
     flex-direction: column;
     justify-content: center;
     flex: 1;
-    overflow: hidden;
   }
 
   .title {
     font-weight: bold;
-    overflow: clip;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     margin: 0;
   }
 
   .artist {
     margin: 0;
-    overflow: clip;
-    white-space: nowrap;
-    text-overflow: ellipsis;
   }
 
   button {
@@ -118,9 +94,5 @@
 
   i {
     font-size: 1.4rem;
-  }
-  .playing {
-    font-size: 0.9rem;
-    margin-left: 5px;
   }
 </style>

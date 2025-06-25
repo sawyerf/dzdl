@@ -1,5 +1,5 @@
 <script lang="ts">
-const tabs = [ 'Songs', 'Albums', 'Artists' ];
+const tabs = [ 'Songs', 'Albums', 'Artists', 'Playlists' ];
 let { activeTab = $bindable() } = $props();
 activeTab = activeTab || tabs[0];
 

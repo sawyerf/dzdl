@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Container from "$lib/Container.svelte";
   import Songs from "$lib/Songs.svelte";
   import { getApi } from "$lib/api";
   import HeaderItem from "./HeaderItem.svelte";
@@ -9,7 +8,7 @@
   let info: any | null = $state(null);
 
   onMount(() => {
-    getApi("album", { id: id })
+    getApi("playlist", { id: id })
       .then((res) => res.json())
       .then((data) => {
         info = data;
@@ -24,15 +23,14 @@
   };
 </script>
 
-<HeaderItem image={info?.cover_medium}>
+<HeaderItem image={info?.picture_medium}>
   <h1>{info?.title}</h1>
   <p>
-    {info?.contributors?.map((contributor: any) => contributor.name).join(", ")}
+    {info?.creator?.name} | {info?.fans} fans
   </p>
   <p>
-    {info?.nb_tracks} tracks | {(info?.duration / 60) | 0} min | {info?.release_date}
+    {info?.nb_tracks} tracks | {info?.duration} seconds
   </p>
-  <p>{info?.genres.data.map((genre: any) => genre.name).join(", ")}</p>
   <button onclick={download} aria-label="Download">
     <i class="fa-solid fa-download"></i>
   </button>

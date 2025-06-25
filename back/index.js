@@ -16,11 +16,12 @@ const RIP_BIN = process.env.RIP_BIN || 'rip';
 const TYPE_TRACK = 'track';
 const TYPE_ALBUM = 'album';
 const TYPE_ARTIST = 'artist';
+const TYPE_PLAYLIST = 'playlist';
 
 app.get('/search', async (req, res) => {
     const { search, search_type } = req.query;
 
-    if (![TYPE_TRACK, TYPE_ALBUM, TYPE_ARTIST].includes(search_type)) {
+    if (![TYPE_TRACK, TYPE_ALBUM, TYPE_ARTIST, TYPE_PLAYLIST].includes(search_type)) {
         return res.status(400).json({ error: `Invalid search_type: ${search_type}` });
     }
 
@@ -64,6 +65,51 @@ app.get('/artist', async (req, res) => {
         return res.json(resp.data);
     } catch (error) {
         return res.status(500).json({ error: `Could not fetch artist: ${error.message}` });
+    }
+});
+
+app.get('/artist-info', async (req, res) => {
+    const { id } = req.query;
+
+    if (!id) {
+        return res.status(400).json({ error: 'Artist ID is required' });
+    }
+
+    try {
+        const resp = await axios.get(`https://api.deezer.com/artist/${id}`);
+        return res.json(resp.data);
+    } catch (error) {
+        return res.status(500).json({ error: `Could not fetch artist info: ${error.message}` });
+    }
+});
+
+app.get('/artist-top', async (req, res) => {
+    const { id } = req.query;
+
+    if (!id) {
+        return res.status(400).json({ error: 'Artist ID is required' });
+    }
+
+    try {
+        const resp = await axios.get(`https://api.deezer.com/artist/${id}/top`);
+        return res.json(resp.data);
+    } catch (error) {
+        return res.status(500).json({ error: `Could not fetch artist top tracks: ${error.message}` });
+    }
+});
+
+app.get('/playlist', async (req, res) => {
+    const { id } = req.query;
+
+    if (!id) {
+        return res.status(400).json({ error: 'Playlist ID is required' });
+    }
+
+    try {
+        const resp = await axios.get(`https://api.deezer.com/playlist/${id}`);
+        return res.json(resp.data);
+    } catch (error) {
+        return res.status(500).json({ error: `Could not fetch playlist: ${error.message}` });
     }
 });
 

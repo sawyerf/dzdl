@@ -1,13 +1,16 @@
 <script lang="ts">
-  import Container from "$lib/Container.svelte";
-  import SearchTab from "$lib/SearchTab.svelte";
-  import Albums from "$lib/Albums.svelte";
-  import Artists from "$lib/Artists.svelte";
-  import Songs from "$lib/Songs.svelte";
+  import { getApi } from "$lib/api";
   import { onMount } from "svelte";
   import Album from "$lib/Album.svelte";
+  import Albums from "$lib/Albums.svelte";
   import Artist from "$lib/Artist.svelte";
-  import { getApi } from "$lib/api";
+  import ArtistTop from "$lib/ArtistTop.svelte";
+  import Artists from "$lib/Artists.svelte";
+  import Container from "$lib/Container.svelte";
+  import Playlist from "$lib/Playlist.svelte";
+  import Playlists from "$lib/Playlists.svelte";
+  import SearchTab from "$lib/SearchTab.svelte";
+  import Songs from "$lib/Songs.svelte";
 
   let search = "";
   let timeout: number;
@@ -35,6 +38,8 @@
           searchType = "track";
         } else if (tabSearch === "Artists") {
           searchType = "artist";
+        } else if (tabSearch === "Playlists") {
+          searchType = "playlist";
         } else {
           searchType = "album";
         }
@@ -76,6 +81,7 @@
       on:mouseup={() => (click = false)}
       on:mouseenter={() => (buttonHover = true)}
       on:mouseleave={() => (buttonHover = false)}
+      class="btn-clear"
       class:button-click={click}
       class:button-hover={buttonHover}>clear</button
     >
@@ -86,12 +92,18 @@
       <Album id={hashId} />
     {:else if hash === "artist"}
       <Artist id={hashId} />
+    {:else if hash === "artistTop"}
+      <ArtistTop id={hashId} />
+    {:else if hash === "playlist"}
+      <Playlist id={hashId} />
     {:else if tabSearch == "Songs"}
       <Songs items={albums} />
     {:else if tabSearch == "Artists"}
       <Artists items={albums} />
     {:else if tabSearch == "Albums"}
       <Albums items={albums} />
+    {:else if tabSearch == "Playlists"}
+      <Playlists items={albums} />
     {/if}
   {/if}
 </Container>
@@ -119,7 +131,7 @@
     outline: none;
     font-size: 15px;
   }
-  button {
+  .btn-clear {
     position: absolute;
     right: 0;
     top: 0;
@@ -129,6 +141,7 @@
     color: lightcoral;
     height: 100%;
     padding-right: 10px;
+    cursor: pointer;
   }
   .button-hover {
     color: red;
