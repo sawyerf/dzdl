@@ -3,16 +3,29 @@
   import Albums from "$lib/Albums.svelte";
   import { getApi } from "$lib/api";
   import HeaderItem from "./HeaderItem.svelte";
+  import SearchTab from "./SearchTab.svelte";
+  import Songs from "./Songs.svelte";
 
+  let { id } = $props();
   let albums: any = $state(null);
   let info: any = $state(null);
-  let { id } = $props();
+  let tracks: any = $state(null);
+  let activeTab: string = $state("Albums");
 
   onMount(() => {
     getApi("artist", { id: id })
       .then((res) => res.json())
       .then((data) => {
         albums = data;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    getApi("artist-top", { id: id })
+      .then((res) => res.json())
+      .then((data) => {
+        tracks = data;
       })
       .catch((err) => {
         console.error(err);
@@ -33,11 +46,13 @@
   <h1>{info?.name}</h1>
   <p>{info?.nb_fan} fans</p>
   <p>{info?.nb_album} albums</p>
-  <a href={`#artistTop-${id}`} aria-label="Top tracks">
-    <i class="fa-solid fa-arrow-up"></i>
-  </a>
 </HeaderItem>
-<Albums items={albums?.data} />
+<SearchTab bind:activeTab tabs={["Albums", "Top Tracks"]} center={true} />
+{#if activeTab === "Albums"}
+  <Albums items={albums?.data} />
+{:else if activeTab === "Top Tracks"}
+  <Songs items={tracks?.data} />
+{/if}
 
 <style>
   a {

@@ -7,7 +7,7 @@
   class="btn-back"
   aria-label="Back to search results"
 >
-  <i class="fa-solid fa-arrow-left"></i> Back
+  <i class="fa-solid fa-arrow-left"></i>
 </button>
 <div class="header">
   <img src={props.image} alt="" class:circle={props.isRounded} />
@@ -26,6 +26,9 @@
     padding-top: 10px;
     padding-bottom: 10px;
     cursor: pointer;
+    position: absolute;
+    left: 15px;
+    top: 15px;
   }
 
   .header {

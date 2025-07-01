@@ -4,7 +4,6 @@
   import Album from "$lib/Album.svelte";
   import Albums from "$lib/Albums.svelte";
   import Artist from "$lib/Artist.svelte";
-  import ArtistTop from "$lib/ArtistTop.svelte";
   import Artists from "$lib/Artists.svelte";
   import Container from "$lib/Container.svelte";
   import Playlist from "$lib/Playlist.svelte";
@@ -68,7 +67,9 @@
 </script>
 
 <Container alignItem={search ? "start" : "center"}>
-  <h1>Downloader</h1>
+  <h1>
+    <span style="color: #008000;">dz</span><span style="color: #ff0000;">dl</span>
+  </h1>
   <div class="input">
     <input
       type="text"
@@ -87,13 +88,14 @@
     >
   </div>
   {#if search}
-    <SearchTab bind:activeTab={tabSearch} />
+    <SearchTab
+      bind:activeTab={tabSearch}
+      tabs={["Songs", "Albums", "Artists", "Playlists"]}
+    />
     {#if hash === "album"}
       <Album id={hashId} />
     {:else if hash === "artist"}
       <Artist id={hashId} />
-    {:else if hash === "artistTop"}
-      <ArtistTop id={hashId} />
     {:else if hash === "playlist"}
       <Playlist id={hashId} />
     {:else if tabSearch == "Songs"}
@@ -118,18 +120,20 @@
   }
   .input {
     width: 100%;
-    height: 40px;
+    height: 45px;
     display: flex;
     position: relative;
   }
   input {
     flex: 1;
-    border: 1px solid gray;
-    border-radius: 5px;
-    padding: 0 10px;
+    border: 1px solid lightgray;
+    border-radius: 7px;
+    padding-left: 15px;
+    padding-right: 50px;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.07);
     text-decoration: none;
     outline: none;
-    font-size: 15px;
+    font-size: 15.4px;
   }
   .btn-clear {
     position: absolute;
@@ -138,9 +142,9 @@
     bottom: 0;
     border: none;
     background-color: transparent;
-    color: lightcoral;
+    color: rgb(240, 112, 112);
     height: 100%;
-    padding-right: 10px;
+    padding-right: 15px;
     cursor: pointer;
   }
   .button-hover {

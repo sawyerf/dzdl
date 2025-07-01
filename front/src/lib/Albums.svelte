@@ -5,10 +5,7 @@
 <div class="list">
   {#each props.items as item}
     <a class="item" href={`#album-${item.id}`}>
-      <div class="cover">
-        <img src={item.cover_medium} alt=""/>
-        <button>Play</button>
-      </div>
+      <img src={item.cover_medium} alt="" />
       <p class="title">{item.title}</p>
       <p class="artist">{item.artist?.name}</p>
     </a>
@@ -39,6 +36,7 @@
     aspect-ratio: 1/1;
     height: auto;
     border-radius: 5px;
+    margin-bottom: 5px;
   }
 
   .title {
@@ -50,24 +48,7 @@
     margin: 0;
   }
 
-  .cover {
-    position: relative;
-    aspect-ratio: 1/1;
-    margin-bottom: 5px;
-  }
-
   p {
     font-size: 1.1rem;
-  }
-
-  button {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    padding: 10px 10px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    color: white;
   }
 </style>

@@ -5,10 +5,7 @@
 <div class="list">
   {#each props.items as item}
     <a class="item" href={`#artist-${item.id}`}>
-      <div class="cover">
-        <img src={item.picture_medium} alt="" />
-        <button>Play</button>
-      </div>
+      <img src={item.picture_medium} alt="" />
       <p class="title">{item.name}</p>
     </a>
   {/each}
@@ -36,29 +33,14 @@
   img {
     width: 100%;
     height: auto;
+    aspect-ratio: 1/1;
     border-radius: 50%;
+    margin-bottom: 5px;
   }
 
   .title {
     /* font-weight: bold; */
     margin: 0;
-  }
-
-  .cover {
-    position: relative;
-    aspect-ratio: 1/1;
-    margin-bottom: 5px;
-  }
-
-  button {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    padding: 10px 10px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    color: white;
   }
 
   p {
