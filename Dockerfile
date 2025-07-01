@@ -31,6 +31,6 @@ COPY back/ .
 # Copier le build front dans le back (dossier public)
 COPY --from=front-build /app/front/build ./public
 
-EXPOSE 3000
+EXPOSE 2130
 
 CMD ["node", "index.js"]

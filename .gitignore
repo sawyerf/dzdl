@@ -3,3 +3,6 @@ config.toml
 downloads
 *.mp3
 *.jpg
+navidrome
+.yml
+navidrome.yml
