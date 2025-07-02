@@ -23,14 +23,18 @@ wss.on('connection', (socket) => {
     });
 });
 
-const addNotification = (message) => {
+const addNotification = (message, status) => {
     notifications.push({
         type: 'notification',
+        date: new Date().toISOString(),
+        status,
         message
     });
     clients.forEach(client => {
         client.send(JSON.stringify({
             type: 'notification',
+            date: new Date().toISOString(),
+            status,
             message
         }));
     });
@@ -151,22 +155,26 @@ app.get('/download', async (req, res) => {
         return res.status(400).json({ error: 'URL is required' });
     }
 
-    addNotification(`Starting download for '${name}'`);
+    addNotification(`Starting download for '${name}'`, 'info');
     const process = spawn(RIP_BIN, ['url', url], { shell: true });
+    const stderr = [];
     process.stdout.on('data', (data) => { });
-    process.stderr.on('data', (data) => { console.error(`stderr: ${data}`); });
+    process.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        stderr.push(data.toString());
+    });
     process.on('close', (code) => {
-        console.log(`child process exited with code ${code}`);
         if (code !== 0) {
-            addNotification(`Download failed for ${name}`);
+            // addNotification(`Download failed for ${name}`, 'error');
+            addNotification(`Download failed for ${name}: ${stderr.join('')}`, 'error');
             return res.status(500).json({ error: `Could not download file: process exited with code ${code}` });
         }
-        addNotification(`Download completed for ${name}`);
+        addNotification(`Download completed for ${name}`, 'success');
         res.status(200).json({ message: 'Download completed successfully' });
     });
     process.on('error', (error) => {
-        console.error(`Error: ${error.message}`);
-        addNotification(`Error downloading ${url}: ${error.message}`);
+        // addNotification(`Error downloading ${url}: ${error.message}`, 'error');
+        addNotification(`Download failed for ${name}: ${stderr.join('')}`, 'error');
         res.status(500).json({ error: `Could not download file: ${error.message}` });
     });
 

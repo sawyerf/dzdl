@@ -1,14 +1,14 @@
 <script lang="ts">
+  import { WSConnect } from "$lib/ws";
+
   let notifications: any[] = $state([]);
   let openNotification = $state(false);
   let notRead = $state(0);
 
-  const socket = new WebSocket("ws://localhost:2130");
-  socket.onopen = () => {
-    console.log("WebSocket connection established");
-  };
+  const socket = WSConnect();
   socket.onmessage = (event) => {
     const data: Object[] | Object = JSON.parse(event.data);
+    console.log("Received notification:", data);
     if (Array.isArray(data)) {
       notifications = data;
     } else {
@@ -32,9 +32,15 @@
   {notRead}
 </div>
 <div class="notification-container" class:close={!openNotification}>
+  {#if notifications.length === 0}
+    <p>No notifications</p>
+  {/if}
   {#each [...notifications].reverse() as notification}
     <div class="notification">
-      <p>{notification.message}</p>
+      <p class="notification-date">
+        {new Date(notification.date).toLocaleString()} · {notification.status}
+      </p>
+      <p class="notification-message">{notification.message}</p>
     </div>
   {/each}
 </div>
@@ -107,5 +113,27 @@
 
   .notification-container.close {
     display: none;
+  }
+
+  .notification {
+    padding: 10px;
+    border-bottom: solid 1px #ccc;
+  }
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  .notification:last-child {
+    border-bottom: none;
+  }
+  .notification-date {
+    font-size: 12px;
+    color: gray;
+  }
+  .notification-message {
+    font-size: 14px;
+    color: black;
   }
 </style>
