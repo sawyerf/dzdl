@@ -6,7 +6,7 @@
   let preview_url = $state("");
 
   const downloadHandle = (item: any) => {
-    getApi("download", { url: item.link });
+    getApi("download", { url: item.link, name: `${item.title} - ${item.user?.name}` })
   };
 </script>
 

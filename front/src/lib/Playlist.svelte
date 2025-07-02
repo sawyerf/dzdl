@@ -19,7 +19,7 @@
   });
 
   const download = () => {
-    getApi("download", { url: info.link });
+    getApi("download", { url: info.link, name: `${info.title} - Playlist` })
   };
 </script>
 

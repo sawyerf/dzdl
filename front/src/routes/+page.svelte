@@ -10,9 +10,10 @@
   import Playlists from "$lib/Playlists.svelte";
   import SearchTab from "$lib/SearchTab.svelte";
   import Songs from "$lib/Songs.svelte";
+  import Notification from "$lib/Notification.svelte";
 
   let search = "";
-  let timeout: number;
+  let timeout: NodeJS.Timeout | undefined;
   let buttonHover = false;
   let click = false;
   let albums: any[] = [];
@@ -68,8 +69,11 @@
 
 <Container alignItem={search ? "start" : "center"}>
   <h1>
-    <span style="color: #008000;">dz</span><span style="color: #ff0000;">dl</span>
+    <span style="color: #008000;">dz</span><span style="color: #ff0000;"
+      >dl</span
+    >
   </h1>
+  <Notification />
   <div class="input">
     <input
       type="text"
@@ -77,11 +81,11 @@
       placeholder="Search for something..."
     />
     <button
-      on:click={clear}
-      on:mousedown={() => (click = true)}
-      on:mouseup={() => (click = false)}
-      on:mouseenter={() => (buttonHover = true)}
-      on:mouseleave={() => (buttonHover = false)}
+      onclick={clear}
+      onmousedown={() => (click = true)}
+      onmouseup={() => (click = false)}
+      onmouseenter={() => (buttonHover = true)}
+      onmouseleave={() => (buttonHover = false)}
       class="btn-clear"
       class:button-click={click}
       class:button-hover={buttonHover}>clear</button
@@ -114,6 +118,7 @@
   h1 {
     font-size: 2em;
     margin: 0;
+    margin-top: 10px;
     text-align: center;
     color: black;
     margin-bottom: 20px;

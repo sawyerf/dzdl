@@ -14,7 +14,7 @@ const handleClick = (tab: string) => {
 
 <div class="tabs" class:center={center}>
   {#each tabs as tab}
-    <button class:active={activeTab == tab} on:click={() => handleClick(tab)}>{tab}</button>
+    <button class:active={activeTab == tab} onclick={() => handleClick(tab)}>{tab}</button>
   {/each}
 </div>
 

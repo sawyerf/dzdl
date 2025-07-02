@@ -3,7 +3,7 @@
 </script>
 
 <button
-  on:click={() => history.back()}
+  onclick={() => history.back()}
   class="btn-back"
   aria-label="Back to search results"
 >

@@ -1,9 +1,40 @@
 const express = require('express');
 const axios = require('axios');
-const app = express();
+const ws = require('ws');
 const cors = require('cors');
 const { spawn } = require('child_process');
 const PORT = 2130;
+
+const app = express();
+
+const wss = new ws.Server({ noServer: true });
+const notifications = []
+const clients = [];
+
+wss.on('connection', (socket) => {
+    console.log('New WebSocket connection established');
+    clients.push(socket);
+
+    socket.send(JSON.stringify(notifications))
+    socket.on('message', message => console.log(`Received message: ${message}`));
+    socket.on('close', () => {
+        console.log('WebSocket connection closed')
+        clients.splice(clients.indexOf(socket), 1);
+    });
+});
+
+const addNotification = (message) => {
+    notifications.push({
+        type: 'notification',
+        message
+    });
+    clients.forEach(client => {
+        client.send(JSON.stringify({
+            type: 'notification',
+            message
+        }));
+    });
+}
 
 app.use(cors());
 app.use(express.static('public'));
@@ -114,32 +145,39 @@ app.get('/playlist', async (req, res) => {
 });
 
 app.get('/download', async (req, res) => {
-    const { url } = req.query;
+    const { url, name } = req.query;
 
     if (!url) {
         return res.status(400).json({ error: 'URL is required' });
     }
 
+    addNotification(`Starting download for '${name}'`);
     const process = spawn(RIP_BIN, ['url', url], { shell: true });
-    process.stdout.on('data', (data) => {
-        // console.log(`stdout: ${data}`);
-        res.write(data);
-    });
-    process.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-        res.write(data);
-    });
+    process.stdout.on('data', (data) => { });
+    process.stderr.on('data', (data) => { console.error(`stderr: ${data}`); });
     process.on('close', (code) => {
         console.log(`child process exited with code ${code}`);
-        res.end();
+        if (code !== 0) {
+            addNotification(`Download failed for ${name}`);
+            return res.status(500).json({ error: `Could not download file: process exited with code ${code}` });
+        }
+        addNotification(`Download completed for ${name}`);
+        res.status(200).json({ message: 'Download completed successfully' });
     });
     process.on('error', (error) => {
         console.error(`Error: ${error.message}`);
+        addNotification(`Error downloading ${url}: ${error.message}`);
         res.status(500).json({ error: `Could not download file: ${error.message}` });
     });
 
 })
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+server.on('upgrade', (request, socket, head) => {
+    wss.handleUpgrade(request, socket, head, (ws) => {
+        wss.emit('connection', ws, request);
+    });
 });
