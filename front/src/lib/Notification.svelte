@@ -1,21 +1,33 @@
 <script lang="ts">
-  import { WSConnect } from "$lib/ws";
+  import { host } from "$lib/ws";
+  import { onMount } from "svelte";
 
   let notifications: any[] = $state([]);
   let openNotification = $state(false);
   let notRead = $state(0);
 
-  const socket = WSConnect();
-  socket.onmessage = (event) => {
-    const data: Object[] | Object = JSON.parse(event.data);
-    console.log("Received notification:", data);
-    if (Array.isArray(data)) {
-      notifications = data;
-    } else {
-      notifications.push(data);
-      if (!openNotification) notRead += 1;
+  onMount(() => {
+    if (!("WebSocket" in window)) {
+      console.error("WebSocket is not supported by your browser.");
+      return;
     }
-  };
+
+    const socket = new WebSocket(host);
+
+    socket.onopen = () => {
+      console.log("WebSocket connection established");
+    };
+
+    socket.onmessage = (event) => {
+      const data: Object[] | Object = JSON.parse(event.data);
+      if (Array.isArray(data)) {
+        notifications = data;
+      } else {
+        notifications.push(data);
+        if (!openNotification) notRead += 1;
+      }
+    };
+  });
 </script>
 
 <button
