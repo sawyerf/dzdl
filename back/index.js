@@ -156,7 +156,7 @@ app.get('/download', async (req, res) => {
     }
 
     addNotification(`Starting download for '${name}'`, 'info');
-    const process = spawn(RIP_BIN, ['url', url], { shell: true });
+    const process = spawn(RIP_BIN, ['url', '-ndb', url], { shell: true });
     const stderr = [];
     process.stdout.on('data', (data) => { });
     process.stderr.on('data', (data) => {
