@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "cross-env CONFIG_FILE=../config/config.toml nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,9 +14,11 @@
     "child_process": "^1.0.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "smol-toml": "^1.4.2",
     "ws": "^8.18.3"
   },
   "devDependencies": {
+    "cross-env": "^10.0.0",
     "nodemon": "^3.1.10"
   }
 }

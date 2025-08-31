@@ -3,6 +3,8 @@ const axios = require('axios');
 const ws = require('ws');
 const cors = require('cors');
 const { spawn } = require('child_process');
+const TOML = require('smol-toml');
+const fs = require('fs');
 const PORT = 2130;
 
 const app = express();
@@ -46,6 +48,7 @@ app.use(express.static('public'));
 arl = ''
 axios.defaults.headers.common['Cookie'] = `arl=${arl}`;
 const RIP_BIN = process.env.RIP_BIN || 'rip';
+const CONFIG_FILE = process.env.CONFIG_FILE || '/root/.config/streamrip/config.toml';
 
 // Types possibles
 const TYPE_TRACK = 'track';
@@ -178,6 +181,18 @@ app.get('/download', async (req, res) => {
         res.status(500).json({ error: `Could not download file: ${error.message}` });
     });
 
+})
+
+// read /root/.config/streamrip/
+app.get('/config', async (req, res) => {
+    try {
+        const data = fs.readFileSync(CONFIG_FILE, 'utf-8');
+        const config = TOML.parse(data);
+        if (config?.deezer?.arl) config.deezer.arl = ""
+        res.json(config);
+    } catch (error) {
+        res.status(500).json({ error: `Could not read config: ${error.message}` });
+    }
 })
 
 const server = app.listen(PORT, () => {
