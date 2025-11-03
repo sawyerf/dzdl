@@ -12,6 +12,7 @@ const app = express();
 const wss = new ws.Server({ noServer: true });
 const notifications = []
 const clients = [];
+const downloadings = new Set();
 
 wss.on('connection', (socket) => {
     console.log('New WebSocket connection established');
@@ -42,7 +43,7 @@ const addNotification = (message, status) => {
     });
 }
 
-app.use(cors());
+if (process.env.NODE_ENV !== 'production') app.use(cors());
 app.use(express.static('public'));
 
 arl = ''
@@ -158,6 +159,12 @@ app.get('/download', async (req, res) => {
         return res.status(400).json({ error: 'URL is required' });
     }
 
+    console.log(`Starting download for ${url}`);
+    if (downloadings.has(url)) {
+        addNotification(`Download already in progress for '${name}'`, 'warning');
+        return res.status(400).json({ error: `Download already in progress for ${url}` });
+    }
+    downloadings.add(url);
     addNotification(`Starting download for '${name}'`, 'info');
     const process = spawn(RIP_BIN, ['--no-db', 'url', url], { shell: true });
     const stderr = [];
@@ -167,6 +174,7 @@ app.get('/download', async (req, res) => {
         stderr.push(data.toString());
     });
     process.on('close', (code) => {
+        downloadings.delete(url);
         if (code !== 0) {
             // addNotification(`Download failed for ${name}`, 'error');
             addNotification(`Download failed for ${name}: ${stderr.join('')}`, 'error');
@@ -178,22 +186,23 @@ app.get('/download', async (req, res) => {
     process.on('error', (error) => {
         // addNotification(`Error downloading ${url}: ${error.message}`, 'error');
         addNotification(`Download failed for ${name}: ${stderr.join('')}`, 'error');
+        downloadings.delete(url);
         res.status(500).json({ error: `Could not download file: ${error.message}` });
     });
 
 })
 
 // read /root/.config/streamrip/
-app.get('/config', async (req, res) => {
-    try {
-        const data = fs.readFileSync(CONFIG_FILE, 'utf-8');
-        const config = TOML.parse(data);
-        if (config?.deezer?.arl) config.deezer.arl = ""
-        res.json(config);
-    } catch (error) {
-        res.status(500).json({ error: `Could not read config: ${error.message}` });
-    }
-})
+// app.get('/config', async (req, res) => {
+//     try {
+//         const data = fs.readFileSync(CONFIG_FILE, 'utf-8');
+//         const config = TOML.parse(data);
+//         if (config?.deezer?.arl) config.deezer.arl = ""
+//         res.json(config);
+//     } catch (error) {
+//         res.status(500).json({ error: `Could not read config: ${error.message}` });
+//     }
+// })
 
 const server = app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
