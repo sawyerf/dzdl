@@ -56,15 +56,6 @@
 {/if}
 
 <style>
-  a {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--primary-text);
-    font-size: 1.5rem;
-    text-align: start;
-  }
-
   h1 {
     font-size: 2rem;
   }

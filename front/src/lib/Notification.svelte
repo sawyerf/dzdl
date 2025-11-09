@@ -151,8 +151,12 @@
     margin-right: 4px;
   }
 
-  .info {
+  .success {
     background-color: green;
+  }
+
+  .info {
+    background-color: blue;
   }
 
   .warning {
