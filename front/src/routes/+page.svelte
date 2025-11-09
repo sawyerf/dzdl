@@ -1,4 +1,5 @@
 <script lang="ts">
+  import '../styles/global.css';
   import { getApi } from "$lib/api";
   import { onMount } from "svelte";
   import Album from "$lib/Album.svelte";
@@ -117,10 +118,9 @@
 <style>
   h1 {
     font-size: 2em;
-    margin: 0;
     margin-top: 10px;
     text-align: center;
-    color: black;
+    color: var(--primary-text);
     margin-bottom: 20px;
   }
   .input {
@@ -130,12 +130,14 @@
     position: relative;
   }
   input {
+    background-color: var(--input-bg);
     flex: 1;
-    border: 1px solid lightgray;
+    border: 1px solid var(--primary-border);
+    color: var(--primary-text);
     border-radius: 7px;
     padding-left: 15px;
     padding-right: 50px;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 2px 3px var(--primary-shadow);
     text-decoration: none;
     outline: none;
     font-size: 15.4px;

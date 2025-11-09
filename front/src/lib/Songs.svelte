@@ -2,12 +2,26 @@
   import "@fortawesome/fontawesome-free/css/all.min.css";
   import { getApi } from "$lib/api";
 
-  let props = $props();
+  let props: { items: any[]; isNumber?: boolean, isAlbum?: boolean } = $props();
   let preview_url = $state("");
   let idPlaying = $state("");
 
   const downloadHandle = (item: any) => {
-    getApi("download", { url: item.link, name: `${item.title} - ${item.artist?.name}` })
+    getApi("download", {
+      url: item.link,
+      name: `${item.title} - ${item.artist?.name}`,
+    });
+  };
+
+  const playPreview = (item: any) => {
+    preview_url = item.preview;
+    idPlaying = item.id;
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: item.title,
+      artist: item.artist?.name,
+      album: item.album?.title,
+      artwork: [{ src: item.album?.cover }],
+    });
   };
 </script>
 
@@ -18,29 +32,29 @@
   {#each props.items as item}
     <div
       role="button"
+      tabindex="0"
       class="item"
-      onclick={(e) => {
-        preview_url = item.preview;
-        idPlaying = item.id;
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: item.title,
-          artist: item.artist?.name,
-          album: item.album?.title,
-          artwork: [{ src: item.album?.cover }],
-        });
-      }}
+      onclick={(e) => playPreview(item)}
+      onkeydown={(e) => e.key === "Enter" && playPreview(item)}
     >
       <img src={item.album?.cover_medium} alt={item.title} />
       <div class="info">
         <p class="title">
+          {#if props.isNumber}
+            {props.items.indexOf(item) + 1}.
+          {/if}
           {item.title}
           {#if idPlaying === item.id}
             <i class="fa-solid fa-volume-high playing"></i>
           {/if}
         </p>
-        <p class="artist">{item.artist?.name} · {item.album?.title}</p>
+        <p class="artist">{item.artist?.name}{#if props.isAlbum !== false}{" · "}{item.album?.title}{/if}</p>
       </div>
+      <p class="duration">
+        {(item.duration / 60) | 0}:{(item.duration % 60).toString().padStart(2, "0")}
+      </p>
       <button
+        aria-label="Download"
         onclick={(e) => {
           downloadHandle(item);
           e.stopPropagation();
@@ -54,8 +68,14 @@
 
 <style>
   audio {
-    width: 100%;
+    width: calc(100% - 20px);
+    max-width: 900px;
     margin-bottom: 10px;
+    position: fixed;
+    bottom: 0;
+    background-color: white;
+    border-radius: 10px;
+    z-index: 10;
   }
 
   .list {
@@ -70,6 +90,11 @@
     align-items: center;
     cursor: pointer;
     flex: 1;
+    border-radius: 5px;
+  }
+
+  .item:hover {
+    background-color: var(--secondary-bg);
   }
 
   img {
@@ -92,24 +117,34 @@
     overflow: clip;
     white-space: nowrap;
     text-overflow: ellipsis;
-    margin: 0;
   }
 
   .artist {
-    margin: 0;
     overflow: clip;
     white-space: nowrap;
     text-overflow: ellipsis;
+    color: var(--secondary-text);
   }
 
   button {
-    background: white;
+    background: none;
     border: none;
     cursor: pointer;
-    color: #000;
+    color: var(--primary-text);
     font-size: 1.5rem;
     padding: 0.5em;
     z-index: 9;
+  }
+  
+  .duration {
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+
+  @media (max-width: 500px) {
+    .duration {
+      display: none;
+    }
   }
 
   p {
@@ -119,6 +154,7 @@
   i {
     font-size: 1.4rem;
   }
+
   .playing {
     font-size: 0.9rem;
     margin-left: 5px;

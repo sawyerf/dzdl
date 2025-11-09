@@ -50,7 +50,7 @@
   {#each [...notifications].reverse() as notification}
     <div class="notification">
       <p class="notification-date">
-        {new Date(notification.date).toLocaleString()} · {notification.status}
+        {new Date(notification.date).toLocaleString()} · <span class={notification.status}></span>{notification.status}
       </p>
       <p class="notification-message">{notification.message}</p>
     </div>
@@ -63,7 +63,7 @@
     top: 0;
     right: 0;
 
-    color: black;
+    color: var(--primary-text);
     background-color: transparent;
     border: none;
     width: 50px;
@@ -75,23 +75,21 @@
     font-size: 20px;
     padding: 25px;
     margin-top: 10px;
-    margin-right: 10px;
     border-radius: 50%;
   }
 
   .notification-button:hover {
-    background-color: rgb(0, 0, 0, 0.1);
+    background-color: var(--secondary-bg);
   }
 
   .not-read-badge {
     position: absolute;
     top: 10px;
-    right: 10px;
+    right: 0px;
 
     background-color: red;
     color: white;
     font-size: 10px;
-    /* padding: 5px 10px; */
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -117,10 +115,11 @@
     max-height: 400px;
     height: 100%;
     overflow-y: auto;
-    background-color: white;
+    scrollbar-width: thin;
+    background-color: var(--primary-bg);
     border-radius: 10px;
-    border: solid 1px #ccc;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: solid 1px var(--primary-border);
+    box-shadow: 0 2px 5px var(--secondary-bg);
   }
 
   .notification-container.close {
@@ -129,12 +128,7 @@
 
   .notification {
     padding: 10px;
-    border-bottom: solid 1px #ccc;
-  }
-
-  p {
-    margin: 0;
-    padding: 0;
+    border-bottom: solid 1px var(--primary-border);
   }
 
   .notification:last-child {
@@ -142,10 +136,30 @@
   }
   .notification-date {
     font-size: 12px;
-    color: gray;
+    color: var(--secondary-text);
   }
   .notification-message {
     font-size: 14px;
-    color: black;
+    color: var(--primary-text);
+  }
+  
+  span {
+    height: 9px;
+    width: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+  }
+
+  .info {
+    background-color: green;
+  }
+
+  .warning {
+    background-color: orange;
+  }
+
+  .error {
+    background-color: red;
   }
 </style>

@@ -7,7 +7,7 @@
     <a class="item" href={`#album-${item.id}`}>
       <img src={item.cover_medium} alt="" />
       <p class="title">{item.title}</p>
-      <p class="artist">{item.artist?.name}</p>
+      <p class="artist">{item.artist?.name || new Date(item.release_date).getFullYear()}</p>
     </a>
   {/each}
 </div>
@@ -41,11 +41,10 @@
 
   .title {
     font-weight: bold;
-    margin: 0;
   }
 
   .artist {
-    margin: 0;
+    color: var(--secondary-text);
   }
 
   p {

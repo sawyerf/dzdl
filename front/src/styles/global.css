@@ -1,0 +1,38 @@
+:root {
+  --primary-text: #000000;
+  --secondary-text: rgb(85, 85, 85);
+
+
+  --primary-bg: white;
+  --secondary-bg: #f0f0f0;
+  --input-bg: #ffffff;
+
+  --primary-border: #d3d3d3;
+
+  --primary-shadow: rgba(0, 0, 0, 0.07);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-text: #f5f5dc;
+    --secondary-text: #808080;
+
+    --primary-bg: #121212;
+    --secondary-bg: #1e1e1e;
+    --input-bg: #333333;
+
+    --primary-border: #333333;
+
+    --primary-shadow: rgba(255, 255, 255, 0.07);
+  }
+}
+
+body {
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}

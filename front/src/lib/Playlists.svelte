@@ -52,7 +52,7 @@
     align-items: center;
     cursor: pointer;
     text-decoration: none;
-    color: black;
+    color: var(--primary-text);
   }
 
   img {
@@ -71,18 +71,13 @@
 
   .title {
     font-weight: bold;
-    margin: 0;
-  }
-
-  .artist {
-    margin: 0;
   }
 
   button {
-    background: white;
+    background: transparent;
     border: none;
     cursor: pointer;
-    color: #000;
+    color: var(--primary-text);
     font-size: 1.5rem;
     padding: 0.5em;
     z-index: 9;

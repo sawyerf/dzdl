@@ -12,7 +12,7 @@
 <div class="header">
   <img src={props.image} alt="" class:circle={props.isRounded} />
   <div class="info">
-    <slot></slot>
+    {@render props.children()}
   </div>
 </div>
 
@@ -20,7 +20,7 @@
   .btn-back {
     border: none;
     background-color: transparent;
-    color: rgb(59, 59, 59);
+    color: var(--primary-text);
     font-size: 1.2rem;
     text-align: start;
     padding-top: 10px;
@@ -33,16 +33,17 @@
 
   .header {
     display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 25px;
+    margin-bottom: 30px;
   }
 
   img {
     max-width: 30%;
     aspect-ratio: 1/1;
-    border-radius: 5px;
+    border-radius: 4px;
+    background-color: var(--secondary-bg);
   }
-
+  
   @media (width < 800px) {
     .header {
       flex-direction: column;
@@ -68,6 +69,5 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* gap: 10px; */
   }
 </style>

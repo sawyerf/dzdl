@@ -23,7 +23,7 @@ const handleClick = (tab: string) => {
     display: flex;
     margin-top: 10px;
     margin-bottom: 15px;
-    box-shadow: inset 0 -2px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 -2px var(--primary-shadow);
   }
   .center {
     justify-content: center;
@@ -34,13 +34,13 @@ const handleClick = (tab: string) => {
     border-bottom: 2px solid transparent;
     background: none;
     cursor: pointer;
-    color: gray;
+    color: var(--secondary-text);
   }
   .active {
-    border-bottom: 2px solid black;
-    color: black;
+    border-bottom: 2px solid var(--primary-text);
+    color: var(--primary-text);
   }
   button:hover {
-    border-bottom: 2px solid gray;
+    border-bottom: 2px solid var(--secondary-text);
   }
 </style>

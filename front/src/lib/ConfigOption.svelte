@@ -29,8 +29,6 @@
   }
 
   p {
-    /* font-weight: bold; */
-    margin: 0;
     padding: 0;
   }
 

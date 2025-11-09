@@ -100,7 +100,7 @@ app.get('/artist', async (req, res) => {
     }
 
     try {
-        const resp = await axios.get(`https://api.deezer.com/artist/${id}/albums`);
+        const resp = await axios.get(`https://api.deezer.com/artist/${id}/albums?limit=150`);
         return res.json(resp.data);
     } catch (error) {
         return res.status(500).json({ error: `Could not fetch artist: ${error.message}` });
@@ -130,7 +130,7 @@ app.get('/artist-top', async (req, res) => {
     }
 
     try {
-        const resp = await axios.get(`https://api.deezer.com/artist/${id}/top`);
+        const resp = await axios.get(`https://api.deezer.com/artist/${id}/top?limit=50`);
         return res.json(resp.data);
     } catch (error) {
         return res.status(500).json({ error: `Could not fetch artist top tracks: ${error.message}` });

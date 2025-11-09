@@ -38,11 +38,6 @@
     margin-bottom: 5px;
   }
 
-  .title {
-    /* font-weight: bold; */
-    margin: 0;
-  }
-
   p {
     font-size: 1.1rem;
     text-align: center;

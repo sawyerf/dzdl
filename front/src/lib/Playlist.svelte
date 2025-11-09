@@ -42,18 +42,16 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #000;
+    color: var(--primary-text);
     font-size: 1.5rem;
     text-align: start;
   }
 
   h1 {
     font-size: 1.7rem;
-    margin: 0;
   }
 
   p {
     font-size: 1.2rem;
-    margin: 0;
   }
 </style>

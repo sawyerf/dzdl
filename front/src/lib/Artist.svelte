@@ -16,7 +16,7 @@
     getApi("artist", { id: id })
       .then((res) => res.json())
       .then((data) => {
-        albums = data;
+        albums = data?.data?.sort((a: any, b: any) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime()) || [];
       })
       .catch((err) => {
         console.error(err);
@@ -44,12 +44,13 @@
 
 <HeaderItem image={info?.picture_medium} isRounded={true}>
   <h1>{info?.name}</h1>
-  <p>{info?.nb_fan} fans</p>
-  <p>{info?.nb_album} albums</p>
+  <p>{info?.nb_fan} fans | {info?.nb_album} albums</p>
 </HeaderItem>
 <SearchTab bind:activeTab tabs={["Albums", "Top Tracks"]} center={true} />
 {#if activeTab === "Albums"}
-  <Albums items={albums?.data} />
+  <Albums
+    items={albums}
+  />
 {:else if activeTab === "Top Tracks"}
   <Songs items={tracks?.data} />
 {/if}
@@ -59,18 +60,17 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #000;
+    color: var(--primary-text);
     font-size: 1.5rem;
     text-align: start;
   }
 
   h1 {
-    font-size: 1.7rem;
-    margin: 0;
+    font-size: 2rem;
   }
 
   p {
     font-size: 1.2rem;
-    margin: 0;
+    color: var(--secondary-text);
   }
 </style>
